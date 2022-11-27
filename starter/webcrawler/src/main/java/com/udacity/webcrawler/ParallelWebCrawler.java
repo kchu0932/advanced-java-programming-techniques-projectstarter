@@ -1,6 +1,8 @@
 package com.udacity.webcrawler;
 
 import com.udacity.webcrawler.json.CrawlResult;
+import com.udacity.webcrawler.parser.PageParser;
+import com.udacity.webcrawler.parser.PageParserFactory;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -37,8 +39,10 @@ final class ParallelWebCrawler implements WebCrawler {
     this.pool = new ForkJoinPool(Math.min(threadCount, getMaxParallelism()));
   }
 
-  @Override
+//  @Override
+  @Inject PageParserFactory parserFactory;
   public CrawlResult crawl(List<String> startingUrls) {
+    PageParser.Result result = parserFactory.get(url).parse();
     return new CrawlResult.Builder().build();
   }
 

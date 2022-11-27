@@ -53,13 +53,13 @@ public final class WebCrawlerModule extends AbstractModule {
     bind(Clock.class).toInstance(Clock.systemUTC());
     bind(Key.get(Integer.class, MaxDepth.class)).toInstance(config.getMaxDepth());
     bind(Key.get(Integer.class, PopularWordCount.class)).toInstance(config.getPopularWordCount());
-    bind(Key.get(Duration.class, Timeout.class)).toInstance(config.getTimeout());
+    bind(Key.get(Duration.class, Timeout.class)).toInstance(config.getTimeoutSeconds());
     bind(new Key<List<Pattern>>(IgnoredUrls.class) {
     }).toInstance(config.getIgnoredUrls());
 
     install(
         new ParserModule.Builder()
-            .setTimeout(config.getTimeout())
+            .setTimeout(config.getTimeoutSeconds())
             .setIgnoredWords(config.getIgnoredWords())
             .build());
   }

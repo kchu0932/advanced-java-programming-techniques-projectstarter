@@ -44,7 +44,7 @@ public final class ConfigurationLoaderTest {
     assertThat(config.getParallelism()).isEqualTo(4);
     assertThat(config.getImplementationOverride()).isEqualTo("fully.qualified.OverrideClass");
     assertThat(config.getMaxDepth()).isEqualTo(100);
-    assertThat(config.getTimeout()).isEqualTo(Duration.ofSeconds(10));
+    assertThat(config.getTimeoutSeconds()).isEqualTo(Duration.ofSeconds(10));
     assertThat(config.getPopularWordCount()).isEqualTo(5);
     assertThat(config.getProfileOutputPath()).isEqualTo("profileOutput.txt");
     assertThat(config.getResultPath()).isEqualTo("resultPath.json");
@@ -73,7 +73,7 @@ public final class ConfigurationLoaderTest {
     assertThat(config.getParallelism()).isEqualTo(-1);
     assertThat(config.getImplementationOverride()).isEmpty();
     assertThat(config.getMaxDepth()).isEqualTo(100);
-    assertThat(config.getTimeout()).isEqualTo(Duration.ofSeconds(10));
+    assertThat(config.getTimeoutSeconds()).isEqualTo(Duration.ofSeconds(10));
     assertThat(config.getPopularWordCount()).isEqualTo(5);
     assertThat(config.getProfileOutputPath()).isEmpty();
     assertThat(config.getResultPath()).isEmpty();

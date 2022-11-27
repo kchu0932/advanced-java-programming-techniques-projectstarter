@@ -1,16 +1,19 @@
 package com.udacity.webcrawler.json;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import java.time.Duration;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
  * A data class that represents the configuration of a single web crawl.
  */
+@JsonDeserialize(builder = CrawlerConfiguration.Builder.class)
+
 public final class CrawlerConfiguration {
 
   private final List<String> startPages;
@@ -19,7 +22,8 @@ public final class CrawlerConfiguration {
   private final int parallelism;
   private final String implementationOverride;
   private final int maxDepth;
-  private final Duration timeout;
+  private final Duration timeoutSeconds;
+  // in order to use Duration, we would need to add the Module dependency in the pom.xml
   private final int popularWordCount;
   private final String profileOutputPath;
   private final String resultPath;
@@ -31,7 +35,7 @@ public final class CrawlerConfiguration {
       int parallelism,
       String implementationOverride,
       int maxDepth,
-      Duration timeout,
+      Duration timeoutSeconds,
       int popularWordCount,
       String profileOutputPath,
       String resultPath) {
@@ -41,11 +45,24 @@ public final class CrawlerConfiguration {
     this.parallelism = parallelism;
     this.implementationOverride = implementationOverride;
     this.maxDepth = maxDepth;
-    this.timeout = timeout;
+    this.timeoutSeconds = timeoutSeconds;
     this.popularWordCount = popularWordCount;
     this.profileOutputPath = profileOutputPath;
     this.resultPath = resultPath;
   }
+  // needed a default constructor
+//  private CrawlerConfiguration(){
+//    this.startPages = new LinkedList<String>();
+//    this.ignoredUrls = new LinkedList<Pattern>();
+//    this.ignoredWords = new LinkedList<Pattern>();
+//    this.parallelism = -1;
+//    this.implementationOverride = "";
+//    this.maxDepth = 0;
+//    this.timeoutSeconds = Duration.ofSeconds(1);
+//    this.popularWordCount = 0;
+//    this.profileOutputPath = "";
+//    this.resultPath = "";
+//  }
 
   /**
    * An unmodifiable {@link List} of URLs that define the starting points of the web crawl. It
@@ -118,7 +135,7 @@ public final class CrawlerConfiguration {
    * </pre>
    *
    * <p>In this example, the crawler will visit at most A, B, C, and D. The crawler may visit
-   * <i>fewer</i> pages if it runs out of time before it can finish. See {@link #getTimeout()}.
+   * <i>fewer</i> pages if it runs out of time before it can finish. See {@link #getTimeoutSeconds()}.
    */
   public int getMaxDepth() {
     return maxDepth;
@@ -132,8 +149,8 @@ public final class CrawlerConfiguration {
    * finish processing any HTML it has already downloaded, but it will not download any more pages
    * or follow any more links.
    */
-  public Duration getTimeout() {
-    return timeout;
+  public Duration getTimeoutSeconds() {
+    return timeoutSeconds;
   }
 
   /**
@@ -178,6 +195,7 @@ public final class CrawlerConfiguration {
     private final Set<String> ignoredUrls = new LinkedHashSet<>();
     private final Set<String> ignoredWords = new LinkedHashSet<>();
     private int parallelism = -1;
+//    @JsonIgnore
     private String implementationOverride = "";
     private int maxDepth = 0;
     private int timeoutSeconds = 1;
@@ -190,6 +208,7 @@ public final class CrawlerConfiguration {
      *
      * <p>Does nothing if the given page has already been added. See {@link #getStartPages()}.
      */
+    @JsonProperty("startPages")
     public Builder addStartPages(String... startPages) {
       for (String startPage : startPages) {
         this.startPages.add(Objects.requireNonNull(startPage));
@@ -204,6 +223,7 @@ public final class CrawlerConfiguration {
      *
      * @param patterns one or more regular expressions that define a valid {@link Pattern}.
      */
+    @JsonProperty("ignoredUrls")
     public Builder addIgnoredUrls(String... patterns) {
       for (String pattern : patterns) {
         ignoredUrls.add(Objects.requireNonNull(pattern));
@@ -222,6 +242,7 @@ public final class CrawlerConfiguration {
      *
      * @param patterns one or more regular expressions that define a valid {@link Pattern}.
      */
+    @JsonProperty("ignoredWords")
     public Builder addIgnoredWords(String... patterns) {
       for (String pattern : patterns) {
         ignoredWords.add(Objects.requireNonNull(pattern));
@@ -234,6 +255,7 @@ public final class CrawlerConfiguration {
      *
      * <p>See {@link #getParallelism()}.
      */
+    @JsonProperty("parallelism")
     public Builder setParallelism(int parallelism) {
       this.parallelism = parallelism;
       return this;
@@ -245,6 +267,7 @@ public final class CrawlerConfiguration {
      *
      * <p>See {@link #getImplementationOverride()}.
      */
+    @JsonProperty("implementationOverride")
     public Builder setImplementationOverride(String implementationOverride) {
       this.implementationOverride = Objects.requireNonNull(implementationOverride);
       return this;
@@ -255,6 +278,7 @@ public final class CrawlerConfiguration {
      *
      * <p>See {@link #getMaxDepth()}.
      */
+    @JsonProperty("maxDepth")
     public Builder setMaxDepth(int maxDepth) {
       this.maxDepth = maxDepth;
       return this;
@@ -263,8 +287,9 @@ public final class CrawlerConfiguration {
     /**
      * Sets the maximum amount of time allowed for the crawl, specified in seconds.
      *
-     * <p>See {@link #getTimeout()}.
+     * <p>See {@link #getTimeoutSeconds()}.
      */
+    @JsonProperty("timeoutSeconds")
     public Builder setTimeoutSeconds(int seconds) {
       this.timeoutSeconds = seconds;
       return this;
@@ -275,6 +300,7 @@ public final class CrawlerConfiguration {
      *
      * <p>See {@link #getPopularWordCount()}.
      */
+    @JsonProperty("popularWordCount")
     public Builder setPopularWordCount(int popularWordCount) {
       this.popularWordCount = popularWordCount;
       return this;
@@ -285,6 +311,7 @@ public final class CrawlerConfiguration {
      *
      * <p>See {@link #getProfileOutputPath()}.
      */
+    @JsonProperty("profileOutputPath")
     public Builder setProfileOutputPath(String profileOutputPath) {
       this.profileOutputPath = Objects.requireNonNull(profileOutputPath);
       return this;
@@ -295,6 +322,7 @@ public final class CrawlerConfiguration {
      *
      * <p>See {@link #getResultPath()}.
      */
+    @JsonProperty("resultPath")
     public Builder setResultPath(String resultPath) {
       this.resultPath = Objects.requireNonNull(resultPath);
       return this;
