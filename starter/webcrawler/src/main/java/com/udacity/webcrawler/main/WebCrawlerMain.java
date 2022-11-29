@@ -39,7 +39,8 @@ public final class WebCrawlerMain {
     // TODO: Write the crawl results to a JSON file (or System.out if the file name is empty)
     try {String path = config.getResultPath();
 //      System.out.println(path);
-    if (path != null) {
+//      System.out.println("THIS IS AN ISSUE");
+    if (path != null && !path.trim().isEmpty()) {
       resultWriter.write(Path.of(path));
     } else {
       resultWriter.write(new OutputStreamWriter(System.out));
@@ -55,7 +56,9 @@ public final class WebCrawlerMain {
       System.out.println("Usage: WebCrawlerMain [starting-url]");
       return;
     }
-
+//    System.out.println("arg 0 " + args[0]);
+//    System.out.println(args[1]);
+//    System.out.println(args[2]);
     CrawlerConfiguration config = new ConfigurationLoader(Path.of(args[0])).load();
     new WebCrawlerMain(config).run();
   }

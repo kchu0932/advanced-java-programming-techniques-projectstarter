@@ -34,12 +34,11 @@ public final class ConfigurationLoader {
     // TODO: Fill in this method.
 
     try (BufferedReader reader = Files.newBufferedReader(path)){
-      read(reader);
+      return read(reader);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-
-    return new CrawlerConfiguration.Builder().build();
+//    return new CrawlerConfiguration.Builder().build();
   }
 
   /**

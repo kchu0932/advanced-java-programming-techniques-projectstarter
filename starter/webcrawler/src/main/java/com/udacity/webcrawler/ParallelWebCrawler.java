@@ -42,7 +42,7 @@ final class ParallelWebCrawler implements WebCrawler {
 //  @Override
   @Inject PageParserFactory parserFactory;
   public CrawlResult crawl(List<String> startingUrls) {
-    PageParser.Result result = parserFactory.get(url).parse();
+//    PageParser.Result result = parserFactory.get(url).parse();
     return new CrawlResult.Builder().build();
   }
 
